@@ -61,37 +61,36 @@ func (rr *RawRsa) Save(fileName string) error {
 }
 
 // Load will load the rsa key pair from the given file.
-func (rr *RawRsa) Load(fileName string) error {
+func Load(fileName string) (*RawRsa, error) {
 	// ref: https://medium.com/@Raulgzm/export-import-pem-files-in-go-67614624adc7
 
 	// open the file
 	privateKeyFile, err := os.Open(fileName)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	defer privateKeyFile.Close()
 
 	// load file
 	pemfileinfo, err := privateKeyFile.Stat()
 	if err != nil {
-		return err
+		return nil, err
 	}
 	var size int64 = pemfileinfo.Size()
 	pembytes := make([]byte, size)
 	buffer := bufio.NewReader(privateKeyFile)
 	_, err = buffer.Read(pembytes)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	// decode
 	data, _ := pem.Decode([]byte(pembytes))
 	privateKeyImported, err := x509.ParsePKCS1PrivateKey(data.Bytes)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	// assign private key
-	rr = &RawRsa{*privateKeyImported}
-	return nil
+	return &RawRsa{*privateKeyImported}, nil
 }
