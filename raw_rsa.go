@@ -41,12 +41,11 @@ func (rr *RawRsa) RawDecrypt(ciphertext *big.Int) (secretMsg *big.Int) {
 }
 
 // Save will save the rsa key pair to the given file.
-func (rr *RawRsa) Save(fileName string) (err error) {
+func (rr *RawRsa) Save(fileName string) error {
 	// ref: https://medium.com/@Raulgzm/export-import-pem-files-in-go-67614624adc7
 
 	// create private key file
-	var pemPrivateFile *os.File
-	pemPrivateFile, err = os.OpenFile(fileName, os.O_WRONLY|os.O_CREATE, 0600)
+	pemPrivateFile, err := os.OpenFile(fileName, os.O_WRONLY|os.O_CREATE, 0600)
 	if err != nil {
 		return err
 	}
@@ -57,7 +56,9 @@ func (rr *RawRsa) Save(fileName string) (err error) {
 		Type:  "RSA PRIVATE KEY",
 		Bytes: x509.MarshalPKCS1PrivateKey(&rr.PrivateKey),
 	}
-	err = pem.Encode(pemPrivateFile, pemPrivateBlock)
+	return pem.Encode(pemPrivateFile, pemPrivateBlock)
+}
+
 	if err != nil {
 		return err
 	}
