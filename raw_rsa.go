@@ -16,14 +16,12 @@ type RawRsa struct {
 
 // NewRawRsa will generate a key pair.
 // If you don't know which random to use, use rand.Reader.
-func NewRawRsa(random io.Reader, bits int) (rr *RawRsa, err error) {
-	var sk *rsa.PrivateKey
-	sk, err = rsa.GenerateKey(random, bits)
+func NewRawRsa(random io.Reader, bits int) (*RawRsa, error) {
+	sk, err := rsa.GenerateKey(random, bits)
 	if err != nil {
 		return nil, err
 	}
-	rr = &RawRsa{*sk}
-	return
+	return &RawRsa{*sk}, nil
 }
 
 // RawEncrypt will encrypt the given secretMsg.
