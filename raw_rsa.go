@@ -65,7 +65,7 @@ func (rr *RawRsa) Load(fileName string) error {
 	// ref: https://medium.com/@Raulgzm/export-import-pem-files-in-go-67614624adc7
 
 	// open the file
-	privateKeyFile, err := os.Open("private_key.pem")
+	privateKeyFile, err := os.Open(fileName)
 	if err != nil {
 		return err
 	}
