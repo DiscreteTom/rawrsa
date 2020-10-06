@@ -51,6 +51,7 @@ func (rr *RawRsa) Save(fileName string) error {
 		return err
 	}
 	defer pemPrivateFile.Close()
+	pemPrivateFile.Truncate(0) // clear file before write
 
 	// encode & save
 	var pemPrivateBlock = &pem.Block{
